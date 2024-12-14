@@ -1,0 +1,126 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.portfolio-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.portfolio-table {
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.portfolio-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.portfolio-table th,
+.portfolio-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.portfolio-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.stock-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stock-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.stock-name {
+  font-weight: 500;
+}
+
+.stock-ticker {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.market-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.market-name {
+  font-weight: 500;
+  color: #2563eb;
+  background-color: #eff6ff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.market-time {
+  color: #666;
+}
+
+.value-positive {
+  color: #22c55e;
+}
+
+.value-negative {
+  color: #ef4444;
+}
+
+.shares-input {
+  width: 80px;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.portfolio-total {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+
+.portfolio-total-value {
+  color: #2563eb;
+}
+
+@media (max-width: 768px) {
+  .portfolio-table {
+    overflow-x: auto;
+  }
+  
+  .stock-info {
+    min-width: 200px;
+  }
+  
+  .shares-input {
+    width: 60px;
+  }
+}

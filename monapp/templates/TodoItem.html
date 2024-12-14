@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo list</title>
+</head>
+<body>
+<h1>Liste des Tâches</h1>
+    <ul>
+        {% for todo in todos %}
+            <li>
+                <h2>{{ todo.title }}</h2>
+                <p>{{ todo.description }}</p>
+                <p>Statut : {% if todo.completed %}Terminé{% else %}Non terminé{% endif %}</p>
+                <small>Ajouté le : {{ todo.created_at }}</small>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
