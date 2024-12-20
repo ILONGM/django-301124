@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>{{ portfolio.name }}</h1>
+<ul>
+{% for ticker, quantity in holdings.items %}
+    <li>{{ ticker }}: {{ quantity }} actions</li>
+{% endfor %}
+</ul>
+<p>Total Holdings: {{ portfolio.holdings|length }}</p>
+</body>
+</html>
