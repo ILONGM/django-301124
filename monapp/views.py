@@ -31,7 +31,7 @@ def portfolio_detail(request, portfolio_id):
         # Ajout d'un prix fictif (remplacez-le par un appel API si nécessaire)
         for holding in holdings:
             holding['currentPrice'] = 100.0  # Prix fictif
-            holding['totalValue'] = holding['shares'] * holding['currentPrice']
+            #holding['totalValue'] = holding['shares'] * holding['currentPrice']
 
         return JsonResponse({'portfolios': holdings})
     except Portfolio.DoesNotExist:

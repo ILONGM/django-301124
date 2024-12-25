@@ -4,43 +4,48 @@ link.rel='stylesheet';
 link.href = './static/monapp/css/style.css';
 document.head.appendChild(link);
 
+let stocks = [];
+
 async function fetchPortfolios() {
   try {
     const response = await fetch('/portfolios/1/'); // Remplacez 1 par l'ID du portefeuille
     const data = await response.json();
-    createPortfolioTable(data.portfolios);
+    //createPortfolioTable(data.portfolios);
+    stocks.push(...data.portfolios); // Remplit stocks avec les données reçues
+    createPortfolioTable(); // Crée le tableau après avoir les données
+
   } catch (error) {
     console.error('Erreur lors de la récupération des portfolios:', error);
   }
 }
-
- Crée la liste de mes actions
-const stocks = [
-  {
-    name: 'Tesla',
-    ticker: 'TSLA',
-    logo: 'https://logo.clearbit.com/tesla.com',
-    shares: 21,
-    market: 'NASDAQ',
-    currentPrice: 0
-  },
-  {
-    name: 'Coca-Cola',
-    ticker: 'KO',
-    logo: 'https://logo.clearbit.com/coca-cola.com',
-    shares: 100,
-    market: 'NASDAQ',
-    currentPrice: 0
-  },
-  {
-    name: 'Phillips 66',
-    ticker: 'PSX',
-    logo: 'https://logo.clearbit.com/Phillips66.com',
-    shares: 50,
-    market: 'NASDAQ',
-    currentPrice: 0
-  }
-];
+fetchPortfolios();
+// Crée la liste de mes actions
+//const stocks = [ data ];
+//  {
+//    name: 'Tesla',
+//    ticker: 'TSLA',
+//    logo: 'https://logo.clearbit.com/tesla.com',
+//    shares: 21,
+//    market: 'NASDAQ',
+//    currentPrice: 0
+//  },
+//  {
+//    name: 'Coca-Cola',
+//    ticker: 'KO',
+//    logo: 'https://logo.clearbit.com/coca-cola.com',
+//    shares: 100,
+//    market: 'NASDAQ',
+//    currentPrice: 0
+//  },
+//  {
+//    name: 'Phillips 66',
+//    ticker: 'PSX',
+//    logo: 'https://logo.clearbit.com/Phillips66.com',
+//    shares: 50,
+//    market: 'NASDAQ',
+//    currentPrice: 0
+//  }
+//];
 
 const formatter = new Intl.NumberFormat('fr-FR', {
   style: 'currency',
