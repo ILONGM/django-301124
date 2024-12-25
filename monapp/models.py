@@ -1,10 +1,7 @@
 from django.db import models
 from django.db.models import Sum
 
-# Create your models here.
-class TodoItem(models.Model):
-    title = models.CharField(max_length=200)
-    completed = models.BooleanField(default=False)
+
 
 #table de portefeuille (si je gère plusieurs portefeuille)
 class Portfolio(models.Model):
@@ -36,6 +33,26 @@ class Portfolio(models.Model):
 
         return holdings
 
+    def holdings_with_details(self):
+        """
+        Retourne les actions détenues avec leurs détails.
+        """
+        holdings = self.holdings()
+        actions = Action.objects.filter(ticker__in=holdings.keys())
+        detailed_holdings = []
+
+        for action in actions:
+            detailed_holdings.append({
+                'name': action.name,
+                'ticker': action.ticker,
+                'logo': f'https://logo.clearbit.com/{action.name.lower()}.com',
+                'market': action.market,
+                'shares': holdings[action.ticker],
+            })
+
+        return detailed_holdings
+
+
     def __str__(self):
         return self.name
 
@@ -45,11 +62,8 @@ class Portfolio(models.Model):
 class Action(models.Model):
     name = models.CharField(max_length=100)         # Nom de l'action (ex. Apple)
     ticker = models.CharField(max_length=10)        # Symbole boursier (ex. AAPL)
+    logo = f'https://logo.clearbit.com/{name}.com'
     market = models.CharField(max_length=100)       # Marché (ex. NASDAQ)
-    sector = models.CharField(max_length=100)       # Secteur (ex. Technologie)
-    description = models.TextField(blank=True)      # Description de l'action
-    created_at = models.DateTimeField(auto_now_add=True)  # Date d'ajout
-
 
 #Table de log des transactions
 class Transaction(models.Model):
@@ -64,11 +78,23 @@ class Transaction(models.Model):
     quantity = models.PositiveIntegerField()                     # Quantité d'actions
     price_per_share = models.FloatField()                        # Prix unitaire
     transaction_date = models.DateTimeField()                    # Date de la transaction
-    notes = models.TextField(blank=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class Dividend(models.Model):
-    action = models.ForeignKey(Action, on_delete=models.CASCADE)  # Lien vers l'action
-    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)  # Portefeuille associé
-    amount = models.FloatField()                                   # Montant total du dividende
-    dividend_date = models.DateTimeField()                         # Date du paiement
+     action = models.ForeignKey(Action, on_delete=models.CASCADE)  # Lien vers l'action
+     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)  # Portefeuille associé
+     amount = models.FloatField()                                   # Montant total du dividend     dividend_date = models.DateTimeField()                         # Date du paiement

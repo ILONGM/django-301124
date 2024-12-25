@@ -1,5 +1,7 @@
+from django.http import JsonResponse
 from django.shortcuts import render, HttpResponse, get_object_or_404
-from .models import TodoItem, Portfolio
+from .models import Portfolio, Action
+
 
 # a views function takes a request and return a response
 # views is a request handler
@@ -8,17 +10,33 @@ from .models import TodoItem, Portfolio
 def home(request):
     return render(request,'index.html')
 
-def todolist (request):
-    todos = TodoItem.objects.all()
-    return render(request, 'TodoItem.html', {'todos': todos})
-# Create your views here.
 
 # create a view that list portfolios
 def list_portfolios(request):
     portfolios = Portfolio.objects.all()
-    return render(request, 'list.html', {'portfolios': portfolios})
+    return (render(request, 'list.html', {'portfolios': portfolios}))
 
 def view_portfolio(request, portfolio_id):
     portfolio = get_object_or_404(Portfolio, id=portfolio_id)
     holdings = portfolio.holdings()
-    return render(request, 'detail.html', {'portfolio': portfolio, 'holdings': holdings})
+    return JsonResponse (holdings)
+
+def view_action(request):
+    listaction = Action.objects.values()
+    return HttpResponse(listaction)
+
+
+#Création d'une vue pour renvoyer une vision détaillée du portefeuille
+def portfolio_detail(request, portfolio_id):
+    try:
+        portfolio = Portfolio.objects.get(pk=portfolio_id)
+        holdings = portfolio.holdings_with_details()
+
+        # Ajout d'un prix fictif (remplacez-le par un appel API si nécessaire)
+        for holding in holdings:
+            holding['currentPrice'] = 100.0  # Prix fictif
+            holding['totalValue'] = holding['shares'] * holding['currentPrice']
+
+        return JsonResponse({'portfolios': holdings})
+    except Portfolio.DoesNotExist:
+        return JsonResponse({'error': 'Portfolio not found'}, status=404)
