@@ -11,7 +11,7 @@
     <ul>
     {% for portfolio in portfolios %}
         <li>
-            <a href="{% url 'view_portfolio' portfolio.id %}">{{ portfolio.name }}</a>
+            <a href="{% url 'list_portfolios' %}">{{ portfolio.name }}</a>
             - Créé par: {{ portfolio.owner }}
             - Le {{ portfolio.created_at|date:"d F Y" }}
         </li>

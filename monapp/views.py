@@ -14,12 +14,8 @@ def home(request):
 # create a view that list portfolios
 def list_portfolios(request):
     portfolios = Portfolio.objects.all()
-    return (render(request, 'list.html', {'portfolios': portfolios}))
+    return render(request, 'list.html', {'portfolios': portfolios})
 
-def view_portfolio(request, portfolio_id):
-    portfolio = get_object_or_404(Portfolio, id=portfolio_id)
-    holdings = portfolio.holdings()
-    return JsonResponse (holdings)
 
 def view_action(request):
     listaction = Action.objects.values()

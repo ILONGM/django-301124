@@ -14,33 +14,33 @@ async function fetchPortfolios() {
   }
 }
 
-// Crée la liste de mes actions
-//const stocks = [
-//  {
-//    name: 'Tesla',
-//    ticker: 'TSLA',
-//    logo: 'https://logo.clearbit.com/tesla.com',
-//    shares: 21,
-//    market: 'NASDAQ',
-//    currentPrice: 0
-//  },
-//  {
-//    name: 'Coca-Cola',
-//    ticker: 'KO',
-//    logo: 'https://logo.clearbit.com/coca-cola.com',
-//    shares: 100,
-//    market: 'NASDAQ',
-//    currentPrice: 0
-//  },
-//  {
-//    name: 'Phillips 66',
-//    ticker: 'PSX',
-//    logo: 'https://logo.clearbit.com/Phillips66.com',
-//    shares: 50,
-//    market: 'NASDAQ',
-//    currentPrice: 0
-//  }
-//];
+ Crée la liste de mes actions
+const stocks = [
+  {
+    name: 'Tesla',
+    ticker: 'TSLA',
+    logo: 'https://logo.clearbit.com/tesla.com',
+    shares: 21,
+    market: 'NASDAQ',
+    currentPrice: 0
+  },
+  {
+    name: 'Coca-Cola',
+    ticker: 'KO',
+    logo: 'https://logo.clearbit.com/coca-cola.com',
+    shares: 100,
+    market: 'NASDAQ',
+    currentPrice: 0
+  },
+  {
+    name: 'Phillips 66',
+    ticker: 'PSX',
+    logo: 'https://logo.clearbit.com/Phillips66.com',
+    shares: 50,
+    market: 'NASDAQ',
+    currentPrice: 0
+  }
+];
 
 const formatter = new Intl.NumberFormat('fr-FR', {
   style: 'currency',
