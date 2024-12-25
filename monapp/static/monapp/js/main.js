@@ -175,16 +175,9 @@ async function getStockQuote(ticker) {
 
 
 
-
-
-
-
-
-
-
 // Initialisation
 createPortfolioTable();
 
 // Mise à jour des prix toutes les 5 secondes
-setInterval(updateStockPrices, 500000);
+setInterval(updateStockPrices, 5000);
 updateStockPrices();
