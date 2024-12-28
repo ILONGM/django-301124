@@ -6,6 +6,7 @@ document.head.appendChild(link);
 
 let stocks = [];
 
+// fetch portfolios 1 current open positions
 async function fetchPortfolios() {
   try {
     const response = await fetch('/portfolios/1/'); // Remplacez 1 par l'ID du portefeuille
@@ -36,13 +37,7 @@ function calculatePortfolioTotal() {
   return stocks.reduce((total, stock) => total + (stock.shares * stock.currentPrice), 0);
 }
 
-function updateShareCount(ticker, newCount) {
-  const stock = stocks.find(s => s.ticker === ticker);
-  if (stock) {
-    stock.shares = parseInt(newCount) || 0;
-    updateStockPrices();
-  }
-}
+
 
 // Crée le tableau avec mes actions 
 function createPortfolioTable() {
@@ -80,14 +75,8 @@ function createPortfolioTable() {
                   </div>
                 </td>
                 <td>
-                  <input 
-                    type="number" 
-                    class="shares-input" 
-                    value="${stock.shares}" 
-                    min="0" 
-                    data-ticker="${stock.ticker}"
-                    onchange="window.updateShareCount('${stock.ticker}', this.value)"
-                  >
+                  <span class="shares-display">${stock.shares}</span>
+
                 </td>
                 <td class="stock-price" data-ticker="${stock.ticker}">Chargement...</td>
                 <td class="stock-total" data-ticker="${stock.ticker}">Chargement...</td>
@@ -104,18 +93,15 @@ function createPortfolioTable() {
   `;
 
   document.querySelector('#app').innerHTML = tableHTML;
-  window.updateShareCount = updateShareCount;
 }
 
-
-//MAJ le prix de mes actions : Fait appel à la fonction fetchstock prices
+// update stock price function
 async function updateStockPrices() {
   try {
     for (const stock of stocks) {
       //const data = await getStockQuote(stock.ticker);
       // remettre la ligne au dessus pour l'appel API
-      const data = 101
-      console.log('je suis passé par là')
+      const data = 123
       if (data) {
         stock.currentPrice = data;
 //        stock.currentPrice = data.regularMarketPrice;

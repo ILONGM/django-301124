@@ -4,6 +4,11 @@
   box-sizing: border-box;
 }
 
+.shares-display {
+  font-weight: bold;
+}
+
+
 body {
   font-family: Arial, sans-serif;
   line-height: 1.6;
