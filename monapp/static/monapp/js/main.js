@@ -37,7 +37,7 @@ function calculatePortfolioTotal() {
   return stocks.reduce((total, stock) => total + (stock.shares * stock.currentPrice), 0);
 }
 function calculateInvestedAtCostTotal() {
-  return stocks.reduce((total, stock) => total + (stock.shares * stock.net_cost), 0);
+  return stocks.reduce((total, stock) => total + (stock.net_cost), 0);
 }
 
 
@@ -91,7 +91,12 @@ function createPortfolioTable() {
             `).join('')}
 
             <tr class="portfolio-total">
-              <td colspan="5"><strong>Total du Portfolio</strong></td>
+              <td colspan="2"><strong>Total du Portfolio</strong></td>
+              <td colspan="1">
+              <td id="At_cost_total" >Chargement...</td>
+
+              <td colspan="1">
+              </td>
               <td id="portfolioTotal" class="portfolio-total-value">Chargement...</td>
             </tr>
 
@@ -131,6 +136,13 @@ async function updateStockPrices() {
     if (portfolioTotalElement) {
       portfolioTotalElement.textContent = formatNumber(calculatePortfolioTotal());
     }
+    // Mise à jour du total at cost
+    const portfolioTotalElement2 = document.getElementById('At_cost_total');
+    if (portfolioTotalElement2) {
+      portfolioTotalElement2.textContent = formatNumber(calculateInvestedAtCostTotal());
+    }
+
+
   } catch (error) {
     console.error('Erreur lors de la mise à jour des prix:', error);
   }
