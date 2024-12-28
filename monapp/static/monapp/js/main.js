@@ -36,7 +36,9 @@ function formatNumber(number) {
 function calculatePortfolioTotal() {
   return stocks.reduce((total, stock) => total + (stock.shares * stock.currentPrice), 0);
 }
-
+function calculateInvestedAtCostTotal() {
+  return stocks.reduce((total, stock) => total + (stock.shares * stock.net_cost), 0);
+}
 
 
 // Crée le tableau avec mes actions 
@@ -53,6 +55,7 @@ function createPortfolioTable() {
               <th>Action</th>
               <th>Marché et Horaire</th>
               <th>Nombre d'Actions</th>
+              <th>At cost </th>
               <th>Prix Actuel</th>
               <th>Valeur Totale</th>
             </tr>
@@ -76,16 +79,22 @@ function createPortfolioTable() {
                 </td>
                 <td>
                   <span class="shares-display">${stock.shares}</span>
-
                 </td>
+
+                <td>
+                    <span class="invested_at_cost">${formatNumber(stock.net_cost)}</span>
+                </td>
+
                 <td class="stock-price" data-ticker="${stock.ticker}">Chargement...</td>
                 <td class="stock-total" data-ticker="${stock.ticker}">Chargement...</td>
               </tr>
             `).join('')}
+
             <tr class="portfolio-total">
-              <td colspan="4"><strong>Total du Portfolio</strong></td>
+              <td colspan="5"><strong>Total du Portfolio</strong></td>
               <td id="portfolioTotal" class="portfolio-total-value">Chargement...</td>
             </tr>
+
           </tbody>
         </table>
       </div>
