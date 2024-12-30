@@ -91,6 +91,7 @@ class Portfolio(models.Model):
                 'shares': details['shares'],
                 'current_invested_at_cost': details['current_invested_at_cost'],
                 'PRU':details['PRU'],
+                'total_sold':details['total_sold'],
                 'profit_realised' : details['profit_realised'],
             })
 

@@ -39,6 +39,9 @@ function calculatePortfolioTotal() {
 function calculateInvestedAtCostTotal() {
   return stocks.reduce((total, stock) => total + (stock.current_invested_at_cost), 0);
 }
+function calculateTotalSold() {
+  return stocks.reduce((total, stock) => total + (stock.total_sold), 0);
+}
 
 
 // Crée le tableau avec mes actions 
@@ -53,10 +56,11 @@ function createPortfolioTable() {
           <thead>
             <tr>
               <th>Action</th>
-              <th>Marché et Horaire</th>
+              <th>Marché</th>
               <th>Nombre d'Actions</th>
-              <th>At cost</th>
+              <th>Current at cost</th>
               <th>PRU</th>
+              <th>Total realised</th>
               <th>Prix Actuel</th>
               <th>Valeur Totale</th>
             </tr>
@@ -90,6 +94,11 @@ function createPortfolioTable() {
                     <span class='PRU'>${formatNumber(stock.PRU)}</span>
                 </td>
 
+                <td>
+                    <span class='total_sold'>${formatNumber(stock.total_sold)}</span>
+                </td>
+
+
                 <td class="stock-price" data-ticker="${stock.ticker}">Chargement...</td>
                 <td class="stock-total" data-ticker="${stock.ticker}">Chargement...</td>
               </tr>
@@ -99,6 +108,8 @@ function createPortfolioTable() {
               <td colspan="2"><strong>Total du Portfolio</strong></td>
               <td colspan="1">
               <td id="At_cost_total" >Chargement...</td>
+              <td colspan="1">
+              <td id="total_sold" >Chargement...</td>
 
               <td colspan="1">
               </td>
@@ -120,7 +131,7 @@ async function updateStockPrices() {
     for (const stock of stocks) {
       //const data = await getStockQuote(stock.ticker);
       // remettre la ligne au dessus pour l'appel API
-      const data = 123
+      const data = 422.12
       if (data) {
         stock.currentPrice = data;
 //        stock.currentPrice = data.regularMarketPrice;
@@ -146,7 +157,10 @@ async function updateStockPrices() {
     if (portfolioTotalElement2) {
       portfolioTotalElement2.textContent = formatNumber(calculateInvestedAtCostTotal());
     }
-
+    const portfolioTotalElement3 = document.getElementById('total_sold');
+    if (portfolioTotalElement3) {
+      portfolioTotalElement3.textContent = formatNumber(calculateTotalSold());
+    }
 
   } catch (error) {
     console.error('Erreur lors de la mise à jour des prix:', error);
