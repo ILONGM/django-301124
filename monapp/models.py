@@ -38,9 +38,11 @@ class Portfolio(models.Model):
         transactions = self.transaction_set.all()
         total_historically_invested = {}
 
+        # calcule le total buy en Eur et # et retourne un PRU
         for ticker, quantity_held in holdings.items():
             buy_transactions = transactions.filter(action__ticker=ticker, transaction_type = 'BUY')
             total_paid = sum(buy.quantity*buy.price_per_share for buy in buy_transactions)
+            quantity_bought = sum(buy.quantity for buy in buy_transactions)
 
             action = buy_transactions.first().action if buy_transactions.exists() else None
 
@@ -49,7 +51,7 @@ class Portfolio(models.Model):
                 'ticker' : ticker,
                 'quantity_held' : quantity_held,
                 'total_invested' : total_paid,
-                'PRU' : total_paid / quantity_held
+                'PRU' : total_paid / quantity_bought
             }
         return total_historically_invested
 
