@@ -14,12 +14,12 @@ async function fetchPortfolios() {
     //injecte dans la variable stocks mon portfolios
     stocks.push(...data.portfolios); // Remplit stocks avec les données reçues
     createPortfolioTable(); // Crée le tableau après avoir les données
-
   } catch (error) {
     console.error('Erreur lors de la récupération des portfolios:', error);
   }
 }
 fetchPortfolios();
+console.log(stocks);
 
 
 const formatter = new Intl.NumberFormat('fr-FR', {
@@ -37,7 +37,7 @@ function calculatePortfolioTotal() {
   return stocks.reduce((total, stock) => total + (stock.shares * stock.currentPrice), 0);
 }
 function calculateInvestedAtCostTotal() {
-  return stocks.reduce((total, stock) => total + (stock.net_cost), 0);
+  return stocks.reduce((total, stock) => total + (stock.current_invested_at_cost), 0);
 }
 
 
@@ -55,7 +55,8 @@ function createPortfolioTable() {
               <th>Action</th>
               <th>Marché et Horaire</th>
               <th>Nombre d'Actions</th>
-              <th>At cost </th>
+              <th>At cost</th>
+              <th>PRU</th>
               <th>Prix Actuel</th>
               <th>Valeur Totale</th>
             </tr>
@@ -82,7 +83,11 @@ function createPortfolioTable() {
                 </td>
 
                 <td>
-                    <span class="invested_at_cost">${formatNumber(stock.net_cost)}</span>
+                    <span class="invested_at_cost">${formatNumber(stock.current_invested_at_cost)}</span>
+                </td>
+
+                <td>
+                    <span class='PRU'>${formatNumber(stock.PRU)}</span>
                 </td>
 
                 <td class="stock-price" data-ticker="${stock.ticker}">Chargement...</td>

@@ -30,8 +30,8 @@ class Portfolio(models.Model):
 
         return holdings
 
-    def total_invested(self):
-        """Calcul le PRU"""
+    def portfolio_data_analysis(self):
+        """Calcul le PRU et d'autres indicateurs de performance"""
         holdings = self.holdings()
         transactions = self.transaction_set.all()
         total_historically_invested = {}
@@ -60,9 +60,10 @@ class Portfolio(models.Model):
             total_historically_invested [ticker] = {
                 'name': action.name if action else '',
                 'ticker' : ticker,
+                'market': action.market if action else '',
                 'quantity_bought' : quantity_bought,
                 'quantity_sold' : quantity_sold,
-                'quantity_held' : quantity_held,
+                'shares' : quantity_held,
                 'total_invested' : total_paid,
                 'total_sold':total_sold,
                 'PRU' : averaged_price_paid,
@@ -73,50 +74,12 @@ class Portfolio(models.Model):
 
     #def realised_gainloss(self):
 
-
-
-    def holdings_with_cost(self):
-        """
-        Retourne les actions détenues en incluant leur le coût total net.
-        """
-        holdings = self.holdings()  # Actions détenues (ticker et quantité)
-        transactions = self.transaction_set.all()  # Transactions associées
-        action_costs = {}
-
-        for ticker, quantity_held in holdings.items():
-            # Transactions d'achat et de vente pour cette action
-            buy_transactions = transactions.filter(action__ticker=ticker, transaction_type='BUY')
-            sell_transactions = transactions.filter(action__ticker=ticker, transaction_type='SELL')
-
-            # Calcul du coût total des achats
-            total_buy_cost = sum(buy.quantity * buy.price_per_share for buy in buy_transactions)
-
-            # Calcul de la quantité vendue
-            total_quantity_sold = sum(sell.quantity for sell in sell_transactions)
-
-            # Ajuster le coût net pour tenir compte des ventes
-            adjusted_cost = total_buy_cost * (quantity_held / (
-                        quantity_held + total_quantity_sold)) if total_quantity_sold > 0 else total_buy_cost
-
-            # Récupérer les détails de l'action
-            action = buy_transactions.first().action if buy_transactions.exists() else None
-
-            action_costs[ticker] = {
-                'name': action.name if action else '',
-                'ticker': ticker,
-                'market': action.market if action else '',
-                'shares': quantity_held,
-                'net_cost': adjusted_cost
-            }
-
-        return action_costs
-
     def holdings_with_details(self):
         """
         Retourne les actions détenues avec leurs détails. Ajoute le logo
         """
         detailed_holdings = []
-        action_details = self.holdings_with_cost()
+        action_details = self.portfolio_data_analysis()
 
         for ticker, details in action_details.items():
             logo_url = f'https://logo.clearbit.com/{details["name"]}.com'
@@ -126,7 +89,9 @@ class Portfolio(models.Model):
                 'logo': logo_url,
                 'market': details['market'],
                 'shares': details['shares'],
-                'net_cost': details['net_cost']
+                'current_invested_at_cost': details['current_invested_at_cost'],
+                'PRU':details['PRU'],
+                'profit_realised' : details['profit_realised'],
             })
 
         return detailed_holdings
