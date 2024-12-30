@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.db import models
 from django.db.models import Sum
 
@@ -89,6 +90,7 @@ class Portfolio(models.Model):
                 'logo': logo_url,
                 'market': details['market'],
                 'shares': details['shares'],
+                'total_invested': details['total_invested'],
                 'current_invested_at_cost': details['current_invested_at_cost'],
                 'PRU':details['PRU'],
                 'total_sold':details['total_sold'],
@@ -109,6 +111,9 @@ class Action(models.Model):
     logo = f'https://logo.clearbit.com/{name}.com'
     market = models.CharField(max_length=100)       # Marché (ex. NASDAQ)
 
+    def __str__(self):
+        return self.name
+
 #Table de log des transactions
 class Transaction(models.Model):
     TRANSACTION_TYPES = [
@@ -123,11 +128,24 @@ class Transaction(models.Model):
     price_per_share = models.FloatField()                        # Prix unitaire
     transaction_date = models.DateTimeField()                    # Date de la transaction
 
+# exempl de comment utiliser le string pour afficher dans ladmin
+    def __str__(self):
+        return f'{self.transaction_date.strftime("%Y-%m-%d")} - {self.transaction_type} - {self.quantity}-{self.action.ticker}'
 
 
+@admin.register(Transaction)
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = (
+        'action',
+        'portfolio',
+        'transaction_date',
+        'transaction_type',
+        'quantity'
+    )
 
-
-
+    list_filter = [
+        'transaction_type'
+    ]
 
 
 

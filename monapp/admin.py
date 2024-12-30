@@ -4,6 +4,5 @@ from .models import Portfolio, Action, Transaction, Dividend
 
 admin.site.register(Portfolio)
 admin.site.register(Action)
-admin.site.register(Transaction)
 admin.site.register(Dividend)
 
