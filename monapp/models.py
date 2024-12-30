@@ -1,15 +1,12 @@
 from django.db import models
 from django.db.models import Sum
 
-
-
 #table de portefeuille (si je gère plusieurs portefeuille)
 class Portfolio(models.Model):
     name = models.CharField(max_length=100)         # Nom du portefeuille
     owner = models.CharField(max_length=100)        # Propriétaire du portefeuille
     created_at = models.DateTimeField(auto_now_add=True)  # Date de création
 
-    # Il fau créer une méthode pour calculer le nombre d'actions détenus dans un portefeuille
     def holdings(self):
         """
         Calcule et retourne les actions détenues dans ce portefeuille.
@@ -22,17 +19,15 @@ class Portfolio(models.Model):
         for transaction in transactions:
             if transaction.action.ticker not in holdings:
                 holdings[transaction.action.ticker] = 0
-
             if transaction.transaction_type == 'BUY':
                 holdings[transaction.action.ticker] += transaction.quantity
             elif transaction.transaction_type == 'SELL':
                 holdings[transaction.action.ticker] -= transaction.quantity
 
-        # Retirer les actions dont la quantité est zéro ou négative
+        # Retire les actions dont la quantité est zéro ou négative
         holdings = {k: v for k, v in holdings.items() if v > 0}
 
         return holdings
-
 
     # Cette fonction est a modifier car la formule pour le prix de vente ne marche pas.
     def holdings_with_cost(self):
