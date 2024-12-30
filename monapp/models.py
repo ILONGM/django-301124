@@ -9,9 +9,10 @@ class Portfolio(models.Model):
 
     def holdings(self):
         """
-        Calcule et retourne les actions détenues dans ce portefeuille.
+        Calcule et retourne le nombre d'actions détenues dans ce portefeuille.
         Le résultat est un dictionnaire où les clés sont les tickers des actions
         et les valeurs sont les quantités détenues.
+        Gère les achat et les ventes
         """
         holdings = {}
         transactions = self.transaction_set.all()
@@ -29,10 +30,32 @@ class Portfolio(models.Model):
 
         return holdings
 
-    # Cette fonction est a modifier car la formule pour le prix de vente ne marche pas.
+    def total_invested(self):
+        """
+        fonction qui calcule le montant total investit
+        """
+        holdings = self.holdings()
+        transactions = self.transaction_set.all()
+        total_historically_invested = {}
+
+        for ticker, quantity_held in holdings.items():
+            buy_transactions = transactions.filter(action__ticker=ticker, transaction_type = 'BUY')
+            total_paid = sum(buy.quantity*buy.price_per_share for buy in buy_transactions)
+
+            action = buy_transactions.first().action if buy_transactions.exists() else None
+
+            total_historically_invested [ticker] = {
+                'name': action.name if action else '',
+                'ticker' : ticker,
+                'quantity_held' : quantity_held,
+                'total_invested' : total_paid,
+                'PRU' : total_paid / quantity_held
+            }
+        return total_historically_invested
+
     def holdings_with_cost(self):
         """
-        Retourne les actions détenues avec leurs détails, incluant le coût total net.
+        Retourne les actions détenues en incluant leur le coût total net.
         """
         holdings = self.holdings()  # Actions détenues (ticker et quantité)
         transactions = self.transaction_set.all()  # Transactions associées
@@ -59,7 +82,6 @@ class Portfolio(models.Model):
             action_costs[ticker] = {
                 'name': action.name if action else '',
                 'ticker': ticker,
-                'logo': action.logo if action and action.logo else '',
                 'market': action.market if action else '',
                 'shares': quantity_held,
                 'net_cost': adjusted_cost
@@ -69,7 +91,7 @@ class Portfolio(models.Model):
 
     def holdings_with_details(self):
         """
-        Retourne les actions détenues avec leurs détails.
+        Retourne les actions détenues avec leurs détails. Ajoute le logo
         """
         detailed_holdings = []
         action_details = self.holdings_with_cost()
@@ -91,20 +113,6 @@ class Portfolio(models.Model):
     def __str__(self):
         return self.name
 
-
-
-#tableau gérant les actions
-class Action(models.Model):
-    name = models.CharField(max_length=100)         # Nom de l'action (ex. Apple)
-    ticker = models.CharField(max_length=10)        # Symbole boursier (ex. AAPL)
-    logo = models.URLField(max_length=200, blank=True, null=True)  # URL du logo
-    market = models.CharField(max_length=100)       # Marché (ex. NASDAQ)
-
-    def save(self, *args, **kwargs):
-        # Définit une URL par défaut si aucun logo n'est fourni
-        if not self.logo:
-            self.logo = f'https://logo.clearbit.com/{self.ticker.lower()}.com'
-        super().save(*args, **kwargs)
 
 
 class Action(models.Model):

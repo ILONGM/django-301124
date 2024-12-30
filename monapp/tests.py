@@ -46,5 +46,14 @@ class ModelsPortfolioTest(TestCase):
 
     def test_holdings_with_cost(self):
         result = self.instance.holdings_with_cost()
+        #print(result)
+
+    def test_holdings_with_details(self):
+        result = self.instance.holdings_with_details()
+        #print(result)
+
+
+    def test_total_invested(self):
+        result = self.instance.total_invested()
         print(result)
 # Create your tests here.
