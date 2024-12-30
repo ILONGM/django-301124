@@ -31,9 +31,7 @@ class Portfolio(models.Model):
         return holdings
 
     def total_invested(self):
-        """
-        fonction qui calcule le montant total investit
-        """
+        """Calcul le PRU"""
         holdings = self.holdings()
         transactions = self.transaction_set.all()
         total_historically_invested = {}
@@ -41,19 +39,41 @@ class Portfolio(models.Model):
         # calcule le total buy en Eur et # et retourne un PRU
         for ticker, quantity_held in holdings.items():
             buy_transactions = transactions.filter(action__ticker=ticker, transaction_type = 'BUY')
-            total_paid = sum(buy.quantity*buy.price_per_share for buy in buy_transactions)
-            quantity_bought = sum(buy.quantity for buy in buy_transactions)
+            sell_transactions = transactions.filter(action__ticker=ticker, transaction_type= 'SELL')
+            #inclure les dividendes ici?
 
+            #récupération des détails des actions (noms, logo etc)
             action = buy_transactions.first().action if buy_transactions.exists() else None
+
+            #calcul des montants investis et du PRU
+            quantity_bought = sum(buy.quantity for buy in buy_transactions)
+            total_paid = sum(buy.quantity*buy.price_per_share for buy in buy_transactions)
+            averaged_price_paid = total_paid/quantity_bought
+            current_invested_at_cost = quantity_held * averaged_price_paid
+
+            #calcul des gains réalisés
+            quantity_sold = sum(sell.quantity for sell in sell_transactions)
+            total_sold = sum(sell.quantity*sell.price_per_share for sell in sell_transactions)
+            profit_realised = total_sold - (quantity_sold * averaged_price_paid)
+
 
             total_historically_invested [ticker] = {
                 'name': action.name if action else '',
                 'ticker' : ticker,
+                'quantity_bought' : quantity_bought,
+                'quantity_sold' : quantity_sold,
                 'quantity_held' : quantity_held,
                 'total_invested' : total_paid,
-                'PRU' : total_paid / quantity_bought
+                'total_sold':total_sold,
+                'PRU' : averaged_price_paid,
+                'current_invested_at_cost' : current_invested_at_cost,
+                'profit_realised' : profit_realised,
             }
         return total_historically_invested
+
+    #def realised_gainloss(self):
+
+
 
     def holdings_with_cost(self):
         """
